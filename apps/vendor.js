@@ -1,33 +1,45 @@
-const faker = require ('@faker-js/faker')
-const eventEmitter = require('../events-pool');
+const faker = require("@faker-js/faker");
+// const eventEmitter = require('../events-pool');
+const io = require("socket.io-client");
+let socket = io.connect("http://localhost:3000");
+let caps = io.connect("http://localhost:3000/caps");
+// socket is listening on
 
+caps.emit("test");
+socket.emit("join");
 
+socket.emit("venderJoined");
 
+socket.on("joinedRoom", (id) => {
+  console.log(`vendor ${id} joined the room`);
+});
 
-  
-  // you can do .on and inside .on you can .emit another thing
-  // .on {
-  //   .emit
-  // }
-  // conclusion: i NEED to have on before emit so can emit work
+// you can do .on and inside .on you can .emit another thing
+// .on {
+//   .emit
+// }
+// conclusion: i NEED to have on before emit so can emit work
 
-  eventEmitter.on('event', (storeName)=> {
-    const orderData = {
-      store: storeName,
-      orderId: faker.faker.datatype.uuid(),
-      customer: faker.faker.name.findName(),
-      address: faker.faker.address.streetAddress()
-    }
-    eventEmitter.emit('pickup', orderData);
+// socket.on('event', (storeName)=> {
+// const orderData = {
+//   store: 'storeName',
+//   orderId: faker.faker.datatype.uuid(),
+//   customer: faker.faker.name.findName(),
+//   address: faker.faker.address.streetAddress()
+// }
+// console.log(orderData);
+setInterval(() => {
+  const orderData = {
+    store: "storeName",
+    orderId: faker.faker.datatype.uuid(),
+    customer: faker.faker.name.findName(),
+    address: faker.faker.address.streetAddress(),
+  };
+  caps.emit("pickup", orderData);
+}, 5000);
 
-    
+// })
 
-  })
-
-  eventEmitter.on ('delivered', (payload)=> {
-    console.log(`Thank you ${payload.customer}`)
-  })
-  
-
-
- 
+caps.on("delivered", (payload) => {
+  console.log(`Thank you for delivering ${payload.orderId}`);
+});
