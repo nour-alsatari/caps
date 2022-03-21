@@ -1,4 +1,6 @@
-const eventEmitter = require('../events-pool')
+// const eventEmitter = require('../events-pool')
+const io = require("socket.io")(3000);
+const caps = io.of("/caps")
 
 
 describe('using spies to test logger methods ',()=>{
@@ -17,17 +19,17 @@ describe('using spies to test logger methods ',()=>{
 
 
     it('testingpickup',async()=>{
-        eventEmitter.emit('pickup',payload);
+        caps.emit('pickup',payload);
         await consoleSpy();
         expect(consoleSpy).toHaveBeenCalled();
     })
     it('testing in-transiet',async()=>{
-        eventEmitter.emit('in-transit',payload);
+        caps.emit('in-transit',payload);
         await consoleSpy();
         expect(consoleSpy).toHaveBeenCalled();
     })
     it('testing delivered',async()=>{
-        eventEmitter.emit('delivered',payload);
+        caps.emit('delivered',payload);
         await consoleSpy();
         expect(consoleSpy).toHaveBeenCalled();
     })
