@@ -15,6 +15,11 @@ describe('using spies to test logger methods ',()=>{
 
     afterAll(()=>{
         consoleSpy.mockRestore();
+        io.httpServer.close();
+        // caps.httpServer.close(); // error properties of undefined
+        console.log('iooooooooooooooooo', io);
+        console.log('capsssssssssssssssssss' , caps);
+
     })
 
 
